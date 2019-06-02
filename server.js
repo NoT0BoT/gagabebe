@@ -1,22 +1,23 @@
-// server.js
-// where your node app starts
+const WS = require("ws");
 
-// init project
-const express = require('express');
-const app = express();
-
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
-
-// http://expressjs.com/en/starter/basic-routing.html
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+let WSS = new WS.Server({
+  port: 8080
 });
 
-// listen for requests :)
-const listener = app.listen(process.env.PORT, function() {
-  console.log('Your app is listening on port ' + listener.address().port);
+let t;
+let o;
+
+WSS.on('connection', async function connection(ws, req) {
+  t = req.query.ws;
+  o = req.query.origin;
+  let webs = new WS(t, {
+    origin: o
+  });
+  webs.onclose = () => {ws.close()};
+  webs.onmessage = msg => {console.log(`BACK: ` + msg);ws.send(msg)};
+  
+  ws.on('message', function(message) {
+    console.log(`GO: ` + message.data);
+    webs.send(message.data);
+  })
 });
