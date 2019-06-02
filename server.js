@@ -1,7 +1,15 @@
 const WS = require("ws");
+const https = require('https');
+const fs = require('fs');
+
+const server = https.createServer({
+  cert: fs.readFileSync('./cert.cert'),
+  key: fs.readFileSync('./key.pem')
+});
 
 let WSS = new WS.Server({
-  port: 8080
+  port: 8080,
+  server: server
 });
 
 let t;
