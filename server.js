@@ -20,10 +20,25 @@ WSS.on('connection', async function connection(ws, req) {
   t = query;
   let webs = new WS(t);
   webs.onclose = () => {ws.close()};
-  webs.onmessage = msg => {console.log(`BACK: ` + msg.data);ws.send(msg.data)};
+  webs.onmessage = msg => {
+    if(webs.readyState === 1) {
+    console.log(`BACK: ` + msg.data);
+    ws.send(msg.data)
+    } else {
+    console.log(`BACK: ` + msg.data);
+    setTimeout(ws.send(msg.data), 1500);
+    }
+
+  };
   
   ws.on('message', function(message) {
-    console.log(`GO: ` + message);
-    webs.send(message);
+    console.log(webs.readyState);
+    if(webs.readyState === 1) {
+      console.log(`GO: ` + message);
+      webs.send(message);
+    } else {
+      console.log(`GO: ` + message.data);
+    setTimeout(() => {webs.send(message.data)}, 2500);
+    }
   })
 });
