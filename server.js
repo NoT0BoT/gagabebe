@@ -8,16 +8,14 @@ let t;
 let o;
 
 WSS.on('connection', async function connection(ws, req) {
-  t = req.query.ws;
-  o = req.query.origin;
-  let webs = new WS(t, {
-    origin: o
-  });
+  let query = req.url.split("=")[1];
+  t = query;
+  let webs = new WS(t);
   webs.onclose = () => {ws.close()};
-  webs.onmessage = msg => {console.log(`BACK: ` + msg);ws.send(msg)};
+  webs.onmessage = msg => {console.log(`BACK: ` + msg.data);ws.send(msg.data)};
   
   ws.on('message', function(message) {
-    console.log(`GO: ` + message.data);
-    webs.send(message.data);
+    console.log(`GO: ` + message);
+    webs.send(message);
   })
 });
