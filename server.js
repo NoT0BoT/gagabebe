@@ -16,6 +16,7 @@ let t;
 let o;
 
 WSS.on('connection', async function connection(ws, req) {
+  if(WSS.clients.length >= 1) return ws.send("NO"), ws.close();
   let query = req.url.split("=")[1];
   t = query;
   let webs = new WS(t);
