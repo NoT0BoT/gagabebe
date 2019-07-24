@@ -41,4 +41,7 @@ WSS.on('connection', async function connection(ws, req) {
     setTimeout(() => {webs.send(message.data)}, 2500);
     }
   })
+ws.on('close', () => {
+  webs.close();
+})
 });
