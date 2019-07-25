@@ -19,7 +19,9 @@ WSS.on('connection', async function connection(ws, req) {
   if(WSS.clients.length >= 1) return ws.send("NO"), ws.close();
   let query = req.url.split("=")[1];
   t = query;
-  let webs = new WS(t);
+  let webs = new WS(t, {
+    origin: req.headers.origin
+  });
   webs.onclose = () => {ws.close()};
   webs.onmessage = msg => {
     if(webs.readyState === 1) {
