@@ -16,7 +16,6 @@ let t;
 let o;
 
 WSS.on('connection', async function connection(ws, req) {
-  if(WSS.clients.length >= 1) return ws.send("NO"), ws.close();
   let query = req.url.split("=")[1];
   t = query;
   let webs = new WS(t, {
@@ -31,11 +30,10 @@ WSS.on('connection', async function connection(ws, req) {
     console.log(`BACK: ` + msg.data);
     setTimeout(ws.send(msg.data), 1500);
     }
-
   };
   
   ws.on('message', function(message) {
-    console.log(webs.readyState);
+    if(message === "WS-STATUS") return ws.send(WSS.clients.size);
     if(webs.readyState === 1) {
       console.log(`GO: ` + message);
       webs.send(message);
