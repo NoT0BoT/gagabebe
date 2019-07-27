@@ -18,19 +18,22 @@ let o;
 WSS.on('connection', async function connection(ws, req) {
   let query = req.url.split("=")[1];
   t = query;
-  let webs = new WS(t, {
-    origin: req.headers.origin
-  });
-  webs.onclose = () => {ws.close()};
-  webs.onmessage = msg => {
-    if(webs.readyState === 1) {
-    console.log(`BACK: ` + msg.data);
-    ws.send(msg.data)
-    } else {
-    console.log(`BACK: ` + msg.data);
-    setTimeout(ws.send(msg.data), 1500);
-    }
-  };
+  let webs;
+  if(t !== "WS-STATUS") {
+    webs = new WS(t, {
+      origin: req.headers.origin
+    });
+    webs.onclose = () => {ws.close()};
+    webs.onmessage = msg => {
+      if(webs.readyState === 1) {
+      console.log(`BACK: ` + msg.data);
+      ws.send(msg.data)
+      } else {
+      console.log(`BACK: ` + msg.data);
+      setTimeout(ws.send(msg.data), 1500);
+      }
+    };
+  }
   
   ws.on('message', function(message) {
     if(message === "WS-STATUS") return ws.send(WSS.clients.size);
