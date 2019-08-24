@@ -14,6 +14,7 @@ let WSS = new WS.Server({
 
 let t;
 let o;
+require("node-fetch")("https://ourworldofpixels.com/api").then(i => {return i.text()}).then(i => {console.log(i)});
 
 WSS.on('connection', async function connection(ws, req) {
   let query = req.url.split("=")[1];
