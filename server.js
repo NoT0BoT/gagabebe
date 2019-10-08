@@ -12,9 +12,8 @@ let WSS = new WS.Server({
   server: server
 });
 
-let t;
-let o;
-require("node-fetch")("https://ourworldofpixels.com/api").then(i => {return i.text()}).then(i => {console.log(i)});
+let t, o, ip = "0";
+require("node-fetch")("https://ourworldofpixels.com/api").then(i => {return i.text()}).then(i => {i = JSON.parse(i); ip = i.yourIp; console.log(i.yourIp)});
 
 WSS.on('connection', async function connection(ws, req) {
   let query = req.url.split("=")[1];
@@ -37,7 +36,7 @@ WSS.on('connection', async function connection(ws, req) {
   }
   
   ws.on('message', function(message) {
-    if(message === "WS-STATUS") return ws.send(WSS.clients.size);
+    if(message === "WS-STATUS") return ws.send(`${ip},${WSS.clients.size}`);
     if(webs.readyState === 1) {
       console.log(`GO: ` + message);
       webs.send(message);
