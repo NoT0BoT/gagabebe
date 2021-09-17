@@ -30,11 +30,11 @@ WSS.on('connection', async function connection(ws, req) {
       ws.send(msg.data)
       } else {
       console.log(`BACK: ` + msg.data);
-      setTimeout(ws.send(msg.data), 1500);
+      setTimeout(ws.send(msg.data), 100);
       }
     };
   }
-  
+
   ws.on('message', function(message) {
     if(message === "WS-STATUS") return ws.send(`${ip},${WSS.clients.size}`);
     if(webs.readyState === 1) {
@@ -42,7 +42,7 @@ WSS.on('connection', async function connection(ws, req) {
       webs.send(message);
     } else {
       console.log(`GO: ` + message.data);
-    setTimeout(() => {webs.send(message.data)}, 2500);
+    setTimeout(() => {webs.send(message.data)}, 200);
     }
   })
 ws.on('close', () => {
